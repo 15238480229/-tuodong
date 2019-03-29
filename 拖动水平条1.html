@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			.box{
+				width: 400px;
+				height: 10px;
+				background: gray;
+				margin: 100px auto;
+				position: relative;
+			}
+			.box .bar{
+				width: 10px;
+				height: 20px;
+				position: absolute;
+				left: 0;
+				top: -5px;
+				background: red;
+				cursor: pointer;
+			}
+			.box .mask{
+				background: red;
+				height: 10px;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			p{
+				text-align: center;
+				font-size: 30px;	
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box" id="box">
+			<div class="bar">
+				
+			</div>
+			<!--遮罩层-->
+			<div class="mask">
+				
+			</div>
+			<p id="percent"></p>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var box=document.getElementById("box");
+		var bar=box.children[0];
+		var mask=box.children[1];
+		var percent=document.getElementById("percent");
+		//鼠标放下事件
+		bar.onmousedown=function(event){
+			event=event || window.event;
+			var leftValue=event.clientX-this.offsetLeft;
+			console.log("leftValue="+leftValue);
+			//鼠标移动事件
+			bar.onmouseover=function(){
+				event=event || window.event;
+				var val=event.clientX-leftValue;
+				var realWidth=box.offsetWidth-bar.offsetWidth;
+				if(val<0){
+					val=0;
+				}else if(val>=realWidth){
+					val=realWidth;
+				}
+				bar.style.left=val+"px";
+				mask.style.left=val+"px";
+				percent.innerHTML="你已经走了"+(val/realWidth*100).toFixed(2)+"%";
+				window.getSelection?window.getSelection().removeAllRanges():document.selection.empty();
+//				window.getSelection?window.getSelection().removeAllRanges():document.selection.empty();
+			}
+			//鼠标离开事件
+			bar.onmouseup=function(){
+				document.onmousemove=null;
+			}
+		}
+	</script>
+</html>
